@@ -50,6 +50,12 @@ final class FrontifyDirective {
       $metadata = Json::decode($rawMetadata);
       $width = !empty($metadata['width']) ? $metadata['width'] : NULL;
       $height = !empty($metadata['height']) ? $metadata['height'] : NULL;
+
+      // Favour dynamicPreviewUrl if available.
+      // https://help.frontify.com/en/articles/8699687-cdn-links
+      if (!empty($metadata['dynamicPreviewUrl'])) {
+        $imageUrl = $metadata['dynamicPreviewUrl'];
+      }
     // If this is a string, use getimagesize().
     // Usage example:
     // @resolveProperty(path: "field_media_frontify_image.uri") @frontifyImageProps
