@@ -37,16 +37,20 @@ final class FrontifyDirective {
     // Usage example:
     // @frontifyImageProps on a Media entity.
     if ($args->value instanceof MediaInterface) {
+
       $media = $args->value;
+      // @todo obtain this field from the bundle.
+      $fieldName = 'field_media_frontify_image';
       if (
         !$media instanceof MediaInterface ||
-        !$media->hasField('field_media_frontify_image') ||
-        $media->get('field_media_frontify_image')->isEmpty()
+        !$media->hasField($fieldName) ||
+        $media->get($fieldName)->isEmpty()
       ) {
         return NULL;
       }
-      $imageUrl = $media->get('field_media_frontify_image')->uri;
-      $rawMetadata = $media->get('field_media_frontify_image')->metadata;
+      // Fallback to static url.
+      $imageUrl = $media->get($fieldName)->uri;
+      $rawMetadata = $media->get($fieldName)->metadata;
       $metadata = Json::decode($rawMetadata);
       $width = !empty($metadata['width']) ? $metadata['width'] : NULL;
       $height = !empty($metadata['height']) ? $metadata['height'] : NULL;
@@ -158,6 +162,48 @@ final class FrontifyDirective {
   }
 
   /**
+   * Video dynamic url with a fallback to the static url.
+   *
+   * To be used by Frontify Media video entities.
+   *
+   * @param \Drupal\graphql_directives\DirectiveArguments $args
+   *
+   * @return string|null
+   */
+  public function videoDynamicUrl(DirectiveArguments $args): ?string {
+    if (empty($args->value)) {
+      return NULL;
+    }
+
+    // Only Media entities have metadata.
+    if (!$args->value instanceof MediaInterface) {
+      return NULL;
+    }
+
+    $media = $args->value;
+    // @todo obtain this field from the bundle.
+    $fieldName = 'field_media_frontify_video';
+    if (
+      !$media->hasField($fieldName) ||
+      $media->get($fieldName)->isEmpty()
+    ) {
+      return NULL;
+    }
+
+    // Fallback to static url.
+    $result = $media->get($fieldName)->uri;
+    $rawMetadata = $media->get($fieldName)->metadata;
+    $metadata = Json::decode($rawMetadata);
+    // Favour dynamicPreviewUrl if available.
+    // https://help.frontify.com/en/articles/8699687-cdn-links
+    if (!empty($metadata['dynamicPreviewUrl'])) {
+      $result = $metadata['dynamicPreviewUrl'];
+    }
+
+    return $result;
+  }
+
+  /**
    * Get the focal point from the Frontify API.
    *
    * @param string $src
@@ -174,11 +220,11 @@ final class FrontifyDirective {
   private function getFocalPoint(string $src, bool $from_cache = FALSE): array {
     $result = [0.5, 0.5]; // fallback.
 
-    // @todo we are assuming here a given field name, get it from the entity bundles that are relevant.
-    $frontifyField = 'field_media_frontify_image';
+    // @todo obtain this field from the bundle.
+    $fieldName = 'field_media_frontify_image';
     $mediaStorage = \Drupal::entityTypeManager()->getStorage('media');
 
-    $mediaImages = $mediaStorage->loadByProperties([$frontifyField . '.uri' => $src]);
+    $mediaImages = $mediaStorage->loadByProperties([$fieldName . '.uri' => $src]);
     $mediaImage = NULL;
     if (!empty($mediaImages)) {
       // Always get the latest instance of a Frontify
@@ -188,17 +234,17 @@ final class FrontifyDirective {
 
     if (
       $mediaImage instanceof MediaInterface &&
-      $mediaImage->hasField($frontifyField) &&
-      !$mediaImage->get($frontifyField)->isEmpty()
+      $mediaImage->hasField($fieldName) &&
+      !$mediaImage->get($fieldName)->isEmpty()
     ) {
       // Load focal point from Drupal snapshot that was done
       // during initial import.
       if ($from_cache) {
-        $frontifyMetadata = json_decode($mediaImage->get($frontifyField)->metadata);
+        $frontifyMetadata = Json::decode($mediaImage->get($fieldName)->metadata);
         $result = $frontifyMetadata->focalPoint ?? $result;
       }
       else {
-        $frontifyId = $mediaImage->get($frontifyField)->id;
+        $frontifyId = $mediaImage->get($fieldName)->id;
         /** @var \Drupal\frontify\FrontifyApi $frontifyApi */
         $frontifyApi = \Drupal::service('frontify.api');
         $result = $frontifyApi->getFocalPoint($frontifyId) ?? $result;
