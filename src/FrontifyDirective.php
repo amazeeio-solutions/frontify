@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\frontify;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\graphql_directives\DirectiveArguments;
 use Drupal\media\Entity\Media;
 use Drupal\media\MediaInterface;
@@ -19,6 +20,8 @@ use Drupal\media\MediaInterface;
 final class FrontifyDirective {
 
   const QUALITY = 90;
+
+  use StringTranslationTrait;
 
   /**
    * Returns Frontify original image props.
@@ -58,7 +61,18 @@ final class FrontifyDirective {
       // Favour dynamicPreviewUrl if available.
       // https://help.frontify.com/en/articles/8699687-cdn-links
       if (!empty($metadata['dynamicPreviewUrl'])) {
-        $imageUrl = $metadata['dynamicPreviewUrl'];
+        // Sometimes, the dynamicPreviewUrl is not correct,
+        // it should start with https://cdn-assets-dynamic.frontify.com (dynamic hostname)
+        // and not https://media.ffycdn.net (static hostname).
+        // Log this case and fallback to the static url.
+        if (str_starts_with($metadata['dynamicPreviewUrl'], 'https://media.ffycdn.net')) {
+          \Drupal::logger('frontify')->error($this->t('Faulty dynamicPreviewUrl for %url in media @id.', [
+            '%url' => $metadata['dynamicPreviewUrl'],
+            '@id' => $media->id(),
+          ]));
+        } else {
+          $imageUrl = $metadata['dynamicPreviewUrl'];
+        }
       }
     // If this is a string, use getimagesize().
     // Usage example:
@@ -197,7 +211,18 @@ final class FrontifyDirective {
     // Favour dynamicPreviewUrl if available.
     // https://help.frontify.com/en/articles/8699687-cdn-links
     if (!empty($metadata['dynamicPreviewUrl'])) {
-      $result = $metadata['dynamicPreviewUrl'];
+      // Sometimes, the dynamicPreviewUrl is not correct,
+      // it should start with https://cdn-assets-dynamic.frontify.com (dynamic hostname)
+      // and not https://media.ffycdn.net (static hostname).
+      // Log this case and fallback to the static url.
+      if (str_starts_with($metadata['dynamicPreviewUrl'], 'https://media.ffycdn.net')) {
+        \Drupal::logger('frontify')->error($this->t('Faulty dynamicPreviewUrl for %url in media @id.', [
+          '%url' => $metadata['dynamicPreviewUrl'],
+          '@id' => $media->id(),
+        ]));
+      } else {
+        $result = $metadata['dynamicPreviewUrl'];
+      }
     }
 
     return $result;
