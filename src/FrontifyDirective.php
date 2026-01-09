@@ -66,9 +66,10 @@ final class FrontifyDirective {
         // and not https://media.ffycdn.net (static hostname).
         // Log this case and fallback to the static url.
         if (str_starts_with($metadata['dynamicPreviewUrl'], 'https://media.ffycdn.net')) {
-          \Drupal::logger('frontify')->error($this->t('Faulty dynamicPreviewUrl for %url in media @id.', [
+          \Drupal::logger('frontify')->error($this->t('Faulty dynamicPreviewUrl for %url in media @id. Metadata: @metadata', [
             '%url' => $metadata['dynamicPreviewUrl'],
             '@id' => $media->id(),
+            '@metadata' => JSON::encode($metadata),
           ]));
         } else {
           $imageUrl = $metadata['dynamicPreviewUrl'];
@@ -216,9 +217,10 @@ final class FrontifyDirective {
       // and not https://media.ffycdn.net (static hostname).
       // Log this case and fallback to the static url.
       if (str_starts_with($metadata['dynamicPreviewUrl'], 'https://media.ffycdn.net')) {
-        \Drupal::logger('frontify')->error($this->t('Faulty dynamicPreviewUrl for %url in media @id.', [
+        \Drupal::logger('frontify')->error($this->t('Faulty dynamicPreviewUrl for %url in media @id. Metadata: @metadata', [
           '%url' => $metadata['dynamicPreviewUrl'],
           '@id' => $media->id(),
+          '@metadata' => JSON::encode($metadata),
         ]));
       } else {
         $result = $metadata['dynamicPreviewUrl'];
