@@ -67,7 +67,7 @@ class FrontifyFinder extends WidgetBase {
 
     $form = array_merge($form, $fields);
 
-    // Move the open button from container to actions
+    // Move the open button from container to actions.
     $form['actions']['open'] = $form['container']['open'];
     unset($form['container']['open']);
 
@@ -173,7 +173,6 @@ class FrontifyFinder extends WidgetBase {
     $this->selectEntities($media_entities, $form_state);
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -265,6 +264,7 @@ class FrontifyFinder extends WidgetBase {
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *   Media type.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */

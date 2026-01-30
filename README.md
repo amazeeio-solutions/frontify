@@ -3,7 +3,14 @@
 Integration of Frontify DAM
 with the Drupal Media Library, Gutenberg and GraphQL v4.
 
-Difference with v2 and v3:
+## Quick start
+
+- Enable the Frontify module
+- Create a new media type, e.g. "Frontify Image" or "Frontify Video"
+- Configure your Frontify url in Web Services > Frontify (/admin/config/frontify/settings)
+- Add a Media Frontify field to e.g. a node type
+
+## Difference between v2 and v3:
 
 - Substitutes the Media Library with the Frontify Finder
 - Generates a thumbnail for the Media entity on Media creation
@@ -37,11 +44,6 @@ This allows
 
 Fetch metadata from Frontify to populate metadata in source and Media translations.
 This is purely optional, so the module can work without setting any API token.
-
-## Configuration
-
-- Add the Frontify url
-- Optionally enable the debug mode
 
 ## Work with the API
 

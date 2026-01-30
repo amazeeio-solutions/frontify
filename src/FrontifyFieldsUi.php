@@ -5,11 +5,7 @@ declare(strict_types=1);
 namespace Drupal\frontify;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Form\FormBuilderInterface;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\Url;
-use Psr\Http\Client\ClientInterface;
 
 /**
  * Configuration class for FrontifyFieldsUi.
@@ -24,6 +20,7 @@ final class FrontifyUiConfig {
   public bool $enable_image_preview = FALSE;
   public string $frontify_context = 'media_library';
   public array $allowed_extensions = [];
+
 }
 
 /**
@@ -41,6 +38,9 @@ final class FrontifyFieldsUi {
     private readonly ConfigFactoryInterface $configFactory,
   ) {}
 
+  /**
+   *
+   */
   public function getFieldsUi(FrontifyUiConfig $config): array {
     $fields = [];
 
@@ -59,7 +59,6 @@ final class FrontifyFieldsUi {
     }
 
     // Add a container to group the input elements for styling purposes.
-
     $containerClasses = ['frontify-media-library-wrapper'];
     if ($config->frontify_context === 'media_library') {
       // Hide by default until Frontify finder is ready.
