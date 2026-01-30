@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\frontify\EventSubscriber;
 
 use Drupal\Core\Routing\RouteSubscriberBase;
-//use Drupal\frontify\Controller\EntityController;
+// Use Drupal\frontify\Controller\EntityController;.
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -17,11 +17,10 @@ final class MediaTypeRouteSubscriber extends RouteSubscriberBase {
    * {@inheritdoc}
    */
   protected function alterRoutes(RouteCollection $collection): void {
-//    // Removes disabled media types from the add media page.
-//    if ($route = $collection->get('entity.media.add_page')) {
-//      $route->setDefault('_controller', EntityController::class . '::addPage');
-//    }
-
+    // // Removes disabled media types from the add media page.
+    //    if ($route = $collection->get('entity.media.add_page')) {
+    //      $route->setDefault('_controller', EntityController::class . '::addPage');
+    //    }
     // Dynamic permission for the media add form.
     // Prevents to use /media/add/[media_type] if it's disabled
     // on the media type source configuration.

@@ -93,7 +93,6 @@ class FrontifyAssetFieldWidget extends LinkWidget {
       ],
     ];
 
-
     $parent = $items->getParent();
     $entityTypeId = $parent instanceof EntityAdapter ? $parent->getEntity()->getEntityTypeId() : '';
 

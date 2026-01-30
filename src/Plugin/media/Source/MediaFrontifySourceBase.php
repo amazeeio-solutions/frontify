@@ -17,6 +17,9 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Mime\MimeTypes;
 
+/**
+ *
+ */
 abstract class MediaFrontifySourceBase extends MediaSourceBase implements MediaSourceFieldConstraintsInterface {
 
   /**

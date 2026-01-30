@@ -7,7 +7,6 @@ namespace Drupal\frontify;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\graphql_directives\DirectiveArguments;
-use Drupal\media\Entity\Media;
 use Drupal\media\MediaInterface;
 
 /**
@@ -71,20 +70,23 @@ final class FrontifyDirective {
             '@id' => $media->id(),
             '@metadata' => JSON::encode($metadata),
           ]));
-        } else {
+        }
+        else {
           $imageUrl = $metadata['dynamicPreviewUrl'];
         }
       }
-    // If this is a string, use getimagesize().
-    // Usage example:
-    // @resolveProperty(path: "field_media_frontify_image.uri") @frontifyImageProps
-    } elseif (is_string($args->value)) {
+      // If this is a string, use getimagesize().
+      // Usage example:
+      // @resolveProperty(path: "field_media_frontify_image.uri") @frontifyImageProps
+    }
+    elseif (is_string($args->value)) {
       $imageUrl = $args->value;
       $imageSize = getimagesize($imageUrl);
       $width = $imageSize ? $imageSize[0] : NULL;
       $height = $imageSize ? $imageSize[1] : NULL;
-    // Ignore the rest.
-    } else {
+      // Ignore the rest.
+    }
+    else {
       return NULL;
     }
 
@@ -222,7 +224,8 @@ final class FrontifyDirective {
           '@id' => $media->id(),
           '@metadata' => JSON::encode($metadata),
         ]));
-      } else {
+      }
+      else {
         $result = $metadata['dynamicPreviewUrl'];
       }
     }
@@ -241,11 +244,13 @@ final class FrontifyDirective {
    *   timeout during SSG.
    *
    * @return float[]
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   private function getFocalPoint(string $src, bool $from_cache = FALSE): array {
-    $result = [0.5, 0.5]; // fallback.
+    // fallback.
+    $result = [0.5, 0.5];
 
     // @todo obtain this field from the bundle.
     $fieldName = 'field_media_frontify_image';

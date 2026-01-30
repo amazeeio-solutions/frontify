@@ -139,7 +139,7 @@ final class FrontifyApi {
       $this->messenger->addError($error);
     }
 
-    return null;
+    return NULL;
   }
 
   /**
