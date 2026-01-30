@@ -3,21 +3,15 @@
 namespace Drupal\frontify\Plugin\media\Source;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\frontify\Form\FrontifyMediaImageForm;
-use Drupal\media\Attribute\MediaSource;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaSourceBase;
 use Drupal\media\MediaSourceFieldConstraintsInterface;
-use Drupal\media\MediaTypeInterface;
 use GuzzleHttp\Exception\TransferException;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
