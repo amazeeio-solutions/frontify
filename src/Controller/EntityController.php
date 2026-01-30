@@ -3,6 +3,7 @@
 namespace Drupal\frontify\Controller;
 
 use Drupal\Core\Entity\Controller\EntityController as CoreEntityController;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Overrides addPage method to prevent to add disabled media types.
@@ -12,7 +13,7 @@ class EntityController extends CoreEntityController {
   /**
    * {@inheritDoc}
    */
-  public function addPage($entity_type_id) {
+  public function addPage($entity_type_id, ?Request $request = NULL) {
     $build = parent::addPage($entity_type_id);
     if ($entity_type_id !== 'media') {
       return $build;
